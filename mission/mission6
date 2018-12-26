@@ -1,0 +1,19 @@
+# 撰寫一個Flask Server， 設計一個端口為user，用戶能對此端口用get方法訪問，傳回
+# {"userId":1,"userName":"xiaoming"}
+
+# 引用套件
+from flask import Flask, request, abort
+import json
+# 準備flask 啟動點
+app = Flask(__name__,static_url_path = "/images" , static_folder = "./images/" )
+
+# 啟動點的路徑 & 內容
+@app.route('/user',methods=['GET'])
+def hello_world():
+    data = {"userId":1,"userName":"xiaoming"}
+    # 將json 轉成字串
+    return json.dumps(data)
+
+# 啟動 flask
+if __name__ == "__main__":
+    app.run(host='0.0.0.0',port='5000')
