@@ -1,0 +1,20 @@
+
+# 使用python的request模組去訪問`https://jsonplaceholder.typicode.com/users
+import requests
+url="https://jsonplaceholder.typicode.com/users"
+res = requests.get(url)
+
+# 取得第2,3,4,5 筆資料
+import json
+datax = json.loads(res.text)
+data=datax[1:5]
+# 偵測當時日期
+import datetime
+HumanTime = datetime.datetime.utcnow().strftime("%Y-%m-%d")
+
+# 轉作檔名
+name = str(HumanTime)
+# 將2345筆資料內容寫入檔案中
+file = open(name, 'w')
+file.write(json.dumps(data))
+file.close()
