@@ -1,0 +1,21 @@
+#server
+# 引用套件
+from flask import Flask, request, abort, jsonify
+# 準備flask 啟動點
+app = Flask(__name__,static_url_path = "/images" , static_folder = "./images/" )
+
+# 啟動點的路徑 方法 內容
+@app.route('/user',methods=['POST'])
+def hello_world():
+    
+    # 將請求轉成json
+    t =request.get_json()
+    
+    # 將請求轉成Diction
+    jsonDict = {'userId':t.get('userId','??? ???')}
+    
+    # 回傳
+    return jsonify(jsonDict)
+# 啟用 flask
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
