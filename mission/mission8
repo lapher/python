@@ -1,0 +1,64 @@
+#撰寫一個Flask Server
+# 安裝flask套件
+!pip install flask
+
+# 引用套件
+from flask import Flask, request, abort, jsonify
+# 準備flask 啟動點
+app = Flask(__name__,static_url_path = "/images" , static_folder = "./images/" )
+
+# 設計一個端口為user，用戶能對此端口用POST方法訪問
+@app.route('/user',methods=['POST'])
+def hello_world():
+    
+    # 將請求轉成json
+    t =request.get_json()
+    
+    # 挾帶任意json body
+    jsonDict = {'userId':t.get('userId','no data')}
+    
+    # 回傳
+    return jsonify(jsonDict)
+# 啟用 flask
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
+    
+#-----------------------------------------------------------------------------------------
+#用戶端讀取
+# 引用套件
+import requests
+import json
+
+# 請求(post)網頁
+url="http://127.0.0.1:5000/user"
+data={
+    "userId" : 123
+}
+# 轉成 json
+res= requests.post(url, json=data)
+data = json.loads(res.text)
+# 確認內容
+print (data)
+
+#-----------------------------------------------------------------------------------------
+#將此body轉存成檔案，存在伺服器上
+# 檔名
+name = "dataTest"
+# 將資料內容寫入檔案中
+file = open(name, 'w')
+file.write(json.dumps(data))
+file.close()
+
+#------------------------------------------------------------------------------------------
+#上傳到S3
+# 引用套件
+import boto3
+from pprint import pprint
+
+# 啟用客戶端
+s3resource = boto3.resource('s3')
+data='x'
+# 上傳物件 (桶子, 物件名稱) (內容, 讀 + 二進位)
+uploadObject = s3resource.Object('iii-tutorial-v2', 'student13/2018-12-26.txt').put(Body=open(name, 'rb'))
+pprint(uploadObject) 
+
